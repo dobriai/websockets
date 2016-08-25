@@ -89,6 +89,9 @@ class WebSocketServerProtocol(WebSocketCommonProtocol):
 
             try:
                 yield from self.close()
+            except ConnectionResetError:
+                # Not sure what to do; raised in asyncio\selector_events.py; _SelectorSocketTransport::_read_ready(); line data = self._sock.recv(self.max_size)
+                logger.info("[Ivan:] Catching and ignoring EXCEPTION: ConnectionResetError; self is a {}".format(self.__class__.__name__))
             except Exception as exc:
                 if self._is_server_shutting_down(exc):
                     pass
